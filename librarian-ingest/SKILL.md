@@ -98,8 +98,11 @@ search the existing canon first:
 - If search surfaces a candidate, `mcp__gbrain__get_page` to read it in full.
 
 You're looking for three situations, handled in step 5/6: an existing page on the **same topic**
-(merge or skip — never make a near-duplicate), a **contradiction** with existing canon (escalate,
-don't silently overwrite), or **nothing** (safe to create fresh).
+(merge or skip — never make a near-duplicate), a **true contradiction** with existing canon (a
+same-fact, same-referent incompatibility — flag it and keep going, never overwrite), or **nothing**
+(safe to create fresh). Note: a source describing a *different* product line, offering, persona, or
+segment than canon already holds is **not** a contradiction — it co-exists, so file it as its own
+page (see step 6).
 
 ### 4. Classify and place
 
@@ -130,8 +133,10 @@ Write each page to satisfy **ceremony** (the rules every canonical write must me
 full template are in [references/placement-and-frontmatter.md](references/placement-and-frontmatter.md).
 The essentials:
 
-- **Valid frontmatter** with a `type:` from the matrix, plus `status:` and `tags:`. Add `date:` for
-  daily/meeting pages, `owner:` / `project:` where they apply.
+- **Valid frontmatter** with a `type:` from the matrix, plus `status:` and `tags:`. `status:` defaults
+  to `active`; use `superseded` / `archived` only when a source **explicitly** says the thing is
+  retired (add a `superseded_by:` pointer if known). Add `date:` for daily/meeting pages,
+  `owner:` / `project:` where they apply.
 - A clear, human title — but **do not** repeat the filename as an `# H1` heading (anti-pattern).
 - **`[[wikilinks]]`** for every entity the page references (people, projects, companies). This is how
   gbrain wires the graph — an unlinked entity is an orphan.
@@ -144,9 +149,25 @@ Apply what you found in step 3:
 
 - **Same-topic existing page** → do not create a near-duplicate. Either fold genuinely new facts into
   the existing page (preserving its structure), or skip and report "already covered by `<path>`".
-- **Contradiction with existing canon** (your source says X, canon says not-X) → **keep the existing
-  canon as-is**, do not overwrite it, and **report the conflict** for human adjudication. Surfacing a
-  conflict is a success, not a failure.
+- **Different is not contradictory — multiple product lines co-exist.** Multiple product lines,
+  offerings, pricing tiers, personas, segments, or sub-brands under one company are **expected** and
+  **all belong in canon**. They are NEVER a conflict and NEVER a reason to hold a page out or to stop
+  the run. File each as its own distinct, clearly-named page/entity (e.g. one offering page per product
+  line, one ICP page per line if their personas differ), and link them under a shared brand/company
+  page where they share a brand layer. Do not pick one, do not blur distinct lines into a single page,
+  do not drop one as a "duplicate."
+- **Retired / superseded offerings still stay in canon.** Only if a source *explicitly* says an
+  offering is retired, sunset, or superseded, record that on the page with a `status:` field
+  (`status: superseded` or `archived`) and, if known, a `superseded_by:` pointer — but still **write
+  the page**, never silently drop it. Absent an explicit statement, treat every documented line as
+  `status: active`; do **not** infer that a newer doc retires an older one.
+- **True contradiction** = a *same-fact, same-referent* incompatibility: one atomic fact about the
+  same entity asserted two incompatible ways (e.g. one founding date given as 2019 and 2021; one HQ
+  city given as Austin and Denver; the *same* plan's price stated as $300 and $500). Handle it
+  **flag-and-continue**: keep existing canon as-is, do not overwrite, **record it under "Conflicts for
+  review" in the manifest, and keep ingesting the rest of the batch.** Surfacing a conflict is a
+  success. **Never halt the batch, and never gate the whole run on a human answer in order to
+  proceed** — file everything you can, and let the human adjudicate the flagged item afterward.
 - **Collision on a filename/slug** with an existing file → keep the existing file, write yours under a
   distinct slug if it's genuinely a different page, and report it. **Never overwrite an existing file.**
 
@@ -198,7 +219,10 @@ Commit: <sha>  (pushed to <remote/branch>)
 - **Faithful, not creative.** You file the company's real knowledge. Tidy structure; never fabricate.
 - **`type:` is law for the engine.** A wrong `type:` mis-wires retrieval even if the folder looks right.
 - **Read before you write.** The canon-read step (3) is the whole point — it's why this isn't a script.
-- **Conflicts and skips are signal.** Reporting them is the job working correctly, not failing.
+- **Conflicts and skips are signal, not a stop.** Flag a true (same-fact, same-referent) contradiction
+  in the manifest and keep ingesting; never halt the batch or make proceeding depend on a human answer.
+  Multiple product lines, offerings, or sub-brands under one company are normal and all belong in
+  canon — never a conflict, never a reason to pick one.
 - **Never emit an empty page.** Empty or failed extraction → quarantine + report, never a blank
   canon page. Never write a secret into canon. Fail closed; a missing page is recoverable, silent
   corruption is not.
