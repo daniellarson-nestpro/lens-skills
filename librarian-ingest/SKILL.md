@@ -35,6 +35,25 @@ the canon's own law and may have been tuned since this skill was written.
 Work through these in order. Process documents one at a time through draft, but do the canon-read
 (step 3) so you have the lay of the land before you draft anything.
 
+### 0. Validate + make safe (before anything else)
+
+Before converting or filing anything, gate every source on these — they protect canon integrity and
+the agents that read it:
+
+- **Size cap.** Skip/flag any single source over a sane limit (e.g. > ~5 MB of text or > ~50k words
+  per page) — chunk or summarize deliberately rather than dumping a wall of text that buries the
+  signal and bloats embeddings. Record oversized sources in the report.
+- **Binaries / assets.** Images, video, archives, executables are not canon text — do not convert
+  them to pages; list them as assets in the report (Resources can reference them later).
+- **Filename + path hardening.** Sanitize every output path to kebab-case ASCII *within the intended
+  subfolder*. Reject path-traversal and absolute paths derived from source names (`../`, leading `/`,
+  drive letters, control chars); a source filename must never decide where a file lands outside its
+  target folder.
+- **Secret scan on content.** Before filing, scan extracted text for secrets (API keys, tokens,
+  passwords, private keys, connection strings). **Do not write secrets into canon** — redact to a
+  placeholder and flag the source in the report. Canon is read by many agents; a secret in canon is a
+  secret leaked.
+
 ### 1. Inventory the source
 
 List every file in the source dir (recurse). Group by kind: `.pdf`, `.docx`, `.md`/`.markdown`,
@@ -56,6 +75,15 @@ extraction far better than ad-hoc parsing:
 "Clean" means: real headings (not bold-as-heading), no broken image embeds, no export boilerplate,
 no giant base64 blobs. If a skill isn't available in this runtime, fall back to a CLI tool
 (`pdftotext` for PDFs) and note the lower-fidelity path in your report.
+
+**Verify extraction before you trust it (critical — silent-empty guard).** After converting, check
+the result actually contains substantive text. A scanned / image-only PDF commonly returns `exit 0`
+with **zero or near-zero characters** from `pdftotext` — a *silent empty*. Treat any empty or
+near-empty extraction (and any hard conversion error) as a **conversion failure, not a page**:
+escalate to OCR (the `pdf` skill's OCR path, or `ocrmypdf`/`tesseract` if present); if OCR is
+unavailable or still yields nothing, **quarantine the source** (leave it unconverted, list it under
+"Could not convert") and move on. **Never create a canon page from empty or failed extraction** — a
+blank page is silent corruption, the exact failure the Lens exists to prevent.
 
 Keep the *content* faithful — you are filing the company's real knowledge, not rewriting it. Tidy
 formatting and structure; do not invent facts or "improve" claims.
@@ -156,6 +184,10 @@ Merged into existing (N):
   - <source file>  →  <existing canon path>  (added: <what>)
 Skipped / duplicate (N):
   - <source file>  →  already covered by <path>
+Could not convert / quarantined (N):
+  - <source file>  →  reason (empty extraction / OCR failed / oversized / binary)
+Redacted secrets (N):
+  - <source file>  →  what was redacted (e.g. API key on line X)
 Conflicts for review (N):
   - <source file>  vs  <canon path>:  <one-line description of the contradiction>
 Commit: <sha>  (pushed to <remote/branch>)
@@ -167,5 +199,8 @@ Commit: <sha>  (pushed to <remote/branch>)
 - **`type:` is law for the engine.** A wrong `type:` mis-wires retrieval even if the folder looks right.
 - **Read before you write.** The canon-read step (3) is the whole point — it's why this isn't a script.
 - **Conflicts and skips are signal.** Reporting them is the job working correctly, not failing.
+- **Never emit an empty page.** Empty or failed extraction → quarantine + report, never a blank
+  canon page. Never write a secret into canon. Fail closed; a missing page is recoverable, silent
+  corruption is not.
 - **Templatizable.** Nothing here is NestPro-specific; the routing matrix and conventions come from the
   target vault's own `LENS.md`. The same skill serves any customer's Lens.
