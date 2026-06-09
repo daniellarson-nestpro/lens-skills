@@ -130,6 +130,14 @@ the same message as a confirm-back — confirm, let them respond, then advance.
   `traction-eos` — apply it lightly, conversationally.
 - **Confirm before you file.** The customer hears their words back before anything becomes canon.
   This is the guardrail against you mis-hearing or over-reaching.
+- **Honor edit instructions literally — especially "blend" / "combine".** When the customer says to
+  blend, merge, or combine answers (or gives two answers and picks "both"), actually produce the
+  *merged* wording that keeps every part they asked to include, then confirm that merged text before
+  locking. Do not silently lock one answer verbatim and drop the other — that loses content the
+  customer explicitly asked to keep. Same for "reword/shorten/swap": apply the change, then confirm.
+- **Multiple people / concurrent answers.** In a shared channel more than one person may answer the
+  same question. Surface every distinct answer you see (never silently pick one, never invent one),
+  and ask which to use or how to combine — then confirm the result.
 - **Meet them where they are.** If they don't know their 10-year target, that's fine and common —
   capture what they *do* know, mark the rest a TODO, keep moving. The session should feel like a
   helpful conversation, not an exam.
@@ -142,7 +150,23 @@ When a section is **confirmed**, draft or merge its canon page(s) following the 
 ceremony** the `librarian-ingest` skill uses (if that skill is installed in this runtime, read its
 placement reference; either way the rules below and the templates here are self-contained, so you
 do not depend on it being present). The per-section destinations and ready-to-fill page templates
-are in [references/canon-templates.md](references/canon-templates.md). The rules that matter most:
+are in [references/canon-templates.md](references/canon-templates.md). **Read that file before drafting
+your first page — do not invent your own frontmatter schema.**
+
+> **Ceremony contract (every page — non-negotiable).** A dry run showed agents improvising frontmatter;
+> these four rules are mandatory and gbrain breaks without them:
+> 1. **`type:` is required** and must be one of the Lens page types (`concept` for identity/values/ICP;
+>    `strategy` for the 10yr/3yr/1yr/rocks ladder; `person` for accountability-chart seat holders).
+>    gbrain keys retrieval and graph wiring off `type:` — a page without it is invisible to the engine.
+>    Do **not** use ad-hoc keys like `section:`/`block:`/`customer:`/`title:` in place of it.
+> 2. **Frontmatter is exactly** `type:` + `status: active` + `tags: [...]` (plus the conditional
+>    `date:`/`owner:`/`project:` where they apply). Nothing else is required; do not invent fields.
+> 3. **Placement** follows the vault's folder map (`Context/core-values.md`, `Context/strategy.md`,
+>    `Context/icp.md`, `Context/accountability-chart.md`, `Team/{name}/{Name}.md`, …). Do **not** invent
+>    a path scheme like `customers/<co>/lens/vto/...` — the vault is already the customer's vault.
+> 4. **No `# H1` that repeats the filename**, and **no em dashes** in the body.
+
+The rules that matter most:
 
 - **Read existing canon first** (`mcp__gbrain__search` + the routing in the vault `CLAUDE.md`).
   Most V/TO output lands in pages that may already exist (`Context/strategy.md`, `Context/icp.md`,
@@ -167,6 +191,14 @@ are in [references/canon-templates.md](references/canon-templates.md). The rules
 Commit confirmed canon to the customer's vault as you go (or in one coherent commit at section
 boundaries), then let the gbrain autopilot sync — or trigger `gbrain sync` and self-check that the
 new page is retrievable via `mcp__gbrain__search`.
+
+> **If this runtime has no writable canon checkout / no git push credentials** (the common case
+> today — *agent-as-committer is a later trust-dial phase*), do not fake a commit. Instead, treat the
+> finished page as your **deliverable**: emit each confirmed page (its exact path + full frontmatter +
+> body) into your durable channel (the Paperclip issue / the worksheet), so the canon-commit authority
+> lands it in the customer's vault from the controlled checkout. The interview, capture, confirm-back,
+> and faithful drafting are all yours either way; only the final `git push` may route through the
+> authority. Say plainly in your wrap-up which pages are committed vs. handed off.
 
 - Clear message, e.g. `guided-intake: capture core values + core focus for <company>`.
 - Add the Paperclip co-author trailer when running as a Paperclip agent:
