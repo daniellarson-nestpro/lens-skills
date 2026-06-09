@@ -1,16 +1,6 @@
 ---
 name: librarian-ingest
-description: >-
-  Ingest a directory of mixed company materials (Notion .md exports, PDFs, .docx,
-  meeting transcripts, plain text) into a Lens canon vault. Converts each source to
-  clean markdown, classifies and places it into the correct Lens folder with valid
-  gbrain `type:` frontmatter, checks existing canon first to avoid duplicates and
-  contradictions, and commits the result so the gbrain autopilot syncs it. This is
-  the Librarian's core capability. Use it whenever you are asked to ingest, onboard,
-  digest, import, or file a batch of source documents into the Lens / company brain /
-  canon vault — including the initial data-dump build and ongoing onboarding of new
-  material — even if the request just says "add these docs to the brain" or "file
-  this folder of stuff."
+description: "Ingest a directory of mixed company materials (Notion .md exports, PDFs, .docx, meeting transcripts, plain text) into a Lens canon vault. Converts each source to clean markdown, classifies and places it into the correct Lens folder with valid gbrain `type:` frontmatter, checks existing canon first to avoid duplicates and contradictions, and commits the result so the gbrain autopilot syncs it. This is the Librarian's core ingestion capability. Use it whenever you are asked to ingest, onboard, digest, import, or file a batch of source documents into the Lens, company brain, or canon vault, including the initial data-dump build and ongoing onboarding of new material, even if the request just says \"add these docs to the brain\" or \"file this folder of stuff.\""
 ---
 
 # Librarian — ingest materials into the Lens canon
